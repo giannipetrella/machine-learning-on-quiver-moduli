@@ -1,0 +1,132 @@
+\usepackage{fontenc}
+\usepackage{graphicx, float}
+\usepackage{geometry}
+\usepackage{parskip}
+
+\usepackage{colonequals}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amsthm, amsfonts, amssymb}
+
+% \usepackage[implicit=true]{hyperref}
+% \hypersetup{
+% hypertexnames = false,
+% bookmarksdepth = 2,
+% bookmarksopen = true,
+% colorlinks,
+% linkcolor = blue,
+% citecolor = green,
+% urlcolor = blue,
+% pdfstartview={XYZ null null 1}
+% }
+\usepackage{bookmark}
+% \usepackage[capitalise]{cleveref}
+
+\usepackage{tikz, tikz-cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{matrix}
+\usetikzlibrary{positioning}
+
+% fonts
+\usepackage{libertine}
+\usepackage[libertine]{newtxmath}
+\usepackage{eucal}
+\renewcommand*\ttdefault{lmvtt} %monospace font
+\usepackage{microtype}
+\frenchspacing
+
+%\usepackage[backend=biber, datamodel=mrnumber, maxbibnames=99, sortcites]{biblatex}
+%\addbibresource{bibliography.bib}
+
+\usepackage{gitinfo2}
+
+\newcommand\gitfootnote[1]{
+  \begin{NoHyper}
+  \renewcommand\thefootnote{}\footnote{#1}
+  \addtocounter{footnote}{-1}
+  \end{NoHyper}
+}
+
+
+% \usepackage{thmtools}
+% \declaretheoremstyle[
+%   spaceabove = 3pt,
+%   spacebelow = 3pt,
+%   bodyfont = \itshape,
+% ]{first}
+% \declaretheoremstyle[
+%   spaceabove = 3pt,
+%   spacebelow = 3pt,
+% ]{second}
+% \declaretheorem[numberwithin=section, style=first]{theorem}
+% \declaretheorem[sibling=theorem, style=first]{conjecture}
+% \declaretheorem[sibling=theorem, style=first]{corollary}
+% \declaretheorem[sibling=theorem, style=first]{lemma}
+% \declaretheorem[sibling=theorem, style=first]{proposition}
+
+% \declaretheorem[sibling=theorem, style=second]{example}
+% \declaretheorem[sibling=theorem, style=second]{remark}
+% \declaretheorem[sibling=theorem, style=second]{definition}
+% \declaretheorem[sibling=theorem, style=second]{notation}
+% \declaretheorem[sibling=theorem, style=second]{assumption}
+% \declaretheorem[sibling=theorem, style=second]{convention}
+% \declaretheorem[sibling=theorem, style=second]{setup}
+
+% \Crefname{assumption}{Assumption}{Assumptions}
+% \Crefname{convention}{Convention}{Conventions}
+% \Crefname{setup}{Setup}{Setups}
+
+% \declaretheorem[numberwithin=section, style=first, title=Theorem]{alphatheorem}
+% \declaretheorem[sibling=alphatheorem, style=first, title=Conjecture]{alphaconjecture}
+% \declaretheorem[sibling=alphatheorem, style=first, title=Question]{alphaquestion}
+
+% \renewcommand{\thealphatheorem}{\Alph{alphatheorem}}
+% \renewcommand{\thealphaconjecture}{\Alph{alphaconjecture}}
+% \renewcommand{\thealphaquestion}{\Alph{alphaquestion}}
+% \crefname{alphatheorem}{Theorem}{Theorems}
+% \crefname{alphaconjecture}{Conjecture}{Conjectures}
+% \crefname{alphaquestion}{Question}{Questions}
+
+
+
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\Ext}{Ext}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\parameterspace}{R}
+\DeclareMathOperator{\modulispace}{M}
+\DeclareMathOperator{\Pic}{Pic}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Hochschild}{HH}
+\DeclareMathOperator{\HH}{H}
+\DeclareMathOperator{\hh}{h}
+
+
+% Numbers
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+
+% Spaces
+\newcommand{\PP}{\mathbb{P}}
+% \newcommand{\AA}{\mathbb{A}}
+
+
+% Sheaves
+\DeclareMathOperator{\sheafHom}{\mathscr{H}\kern -2.5pt\mathit{om}}
+\DeclareMathOperator{\sheafExt}{\mathscr{E}\mathit{xt}}
+
+
+% If and only if
+\newcommand{\iif}{\ensuremath{\Leftrightarrow}}
+
+% Arrow with optional label.
+% Use as A \to[label] B
+\renewcommand*{\to}[1][]{\overset{#1}{\rightarrow}}
+
+
+\newcommand{\stable}{\hyphen\mathrm{st}}
+\newcommand{\semistable}{\hyphen\mathrm{sst}}
+\newcommand{\tuple}[1]{\ensuremath{\mathbf{#1}}}
