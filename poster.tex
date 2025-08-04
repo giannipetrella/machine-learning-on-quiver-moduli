@@ -39,7 +39,7 @@
 % Title
 % ====================
 
-\title{Machine learning features on quiver moduli}
+\title{Machine learning features of quiver moduli}
 
 \author{Gianni Petrella \inst{1}}
 
@@ -51,7 +51,7 @@
 \footercontent{
   \href{https://giannipetrella.eu}{www.giannipetrella.eu} \hfill
   Princeton ML Theory Summer School - August 12-21, 2025}
-% (can be left out to remove footer)
+  % Computations in Algebra and Geometry, ETH - August 25-29, 2025}
 
 % ====================
 % Logo (optional)
@@ -81,7 +81,7 @@
   and a choice of linear application $M_{\alpha}$ for each arrow $\alpha$ \cite{2311.17003}.
 
   The \emph{dimension vector} of a representation $V$
-  is~$\tuple{d} \colonequals (\dim(V_i))_{i \in Q_0}$.
+  is~$\tuple{d} \colonequals \dim(V) \colonequals (\dim(V_i))_{i \in Q_0}$.
 
     \begin{figure}
       \centering
@@ -101,50 +101,43 @@
     a change of basis -
     that is, if they lie in the same orbit of the action of $\operatorname{GL_{\tuple{d}}}$.
 
+    When choosing a \emph{stability parameter} $\theta \in \ZZ^{Q_0}$ for which
+    $\theta \cdot \tuple{d} = 0$, we say that a representation $V$
+    is $\theta$-stable, respectively $\theta$-semistable,
+    if all of its subrepresentations $W$ satisfy
+    $\theta \cdot \dim(W) < 0$, respectively
+    $\theta\cdot\dim(W)\leq 0$.
+
     \todo{why are quiver moduli useful}
     \end{block}
 
   \begin{block}{Moduli spaces of stable representations}
 
     The \emph{moduli space of representations} of $Q$ of dimension vector $\tuple{d}$
-    is a variety whose points correspond to equivalence classes of representations.
+    is a variety whose points correspond to isomorphism classes
+    of $\theta$-stable representations.
 
-    Under apppropriate conditions, it is a smooth projective variety.
-
-    Nam vulputate nunc felis, non condimentum lacus porta ultrices. Nullam sed
-    sagittis metus. Etiam consectetur gravida urna quis suscipit.
-
-    \begin{itemize}
-      \item \textbf{Mauris tempor} risus nulla, sed ornare
-      \item \textbf{Libero tincidunt} a duis congue vitae
-      \item \textbf{Dui ac pretium} morbi justo neque, ullamcorper
-    \end{itemize}
-
-    Eget augue porta, bibendum venenatis tortor.
+    \todo{proprties of quiver moduli, citations}
 
   \end{block}
 
-  \begin{alertblock}{A Highlighted Block}
+  \begin{alertblock}{Geometric invariants}
 
-    This block catches your eye, so \textbf{important stuff} should probably go here.
-
-    Curabitur eu libero vehicula, cursus est fringilla, luctus est. Morbi
-    consectetur mauris quam, at finibus elit auctor ac. Aliquam erat volutpat.
-    Aenean at nisl ut ex ullamcorper eleifend et eu augue. Aenean quis velit
-    tristique odio convallis ultrices a ac odio.
+    Many geometric invariants of quiver moduli can be computed effectively
+    using the software package \quivertools \cite{quivertools}.
+    However, complexity is often a limiting factor,
+    so for large scale applications we attempt to model
+    several of these features using machine learning techniques.
 
     \begin{itemize}
-      \item \textbf{Fusce dapibus tellus} vel tellus semper finibus. In
-        consequat, nibh sed mattis luctus, augue diam fermentum lectus.
-      \item \textbf{In euismod erat metus} non ex. Vestibulum luctus augue in
-        mi condimentum, at sollicitudin lorem viverra.
-      \item \textbf{Suspendisse vulputate} mauris vel placerat consectetur.
-        Mauris semper, purus ac hendrerit molestie, elit mi dignissim odio, in
-        suscipit felis sapien vel ex.
-    \end{itemize}
+      \item \textbf{Euler characteristic} is computed via Betti numbers computations \cite{}.
 
-    Aenean tincidunt risus eros, at gravida lorem sagittis vel. Vestibulum ante
-    ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.
+      \item \textbf{(Strong) ample stability} are properties verified by enumerating
+      all possible Harder--Narasimhan types and destabilizing subdimension vectors as in \cite{2311.17003}.
+
+      \item \textbf{Teleman inequality bounds} are computed again
+      for each Harder--Narasimhan type using \cite{}
+    \end{itemize}
 
   \end{alertblock}
 
@@ -154,15 +147,15 @@
 
 \begin{column}{\colwidth}
 
-  \begin{block}{A Block Containing an Enumerated List}
+  \begin{block}{Applications}
 
-    Vivamus congue volutpat elit non semper. Praesent molestie nec erat ac
-    interdum. In quis suscipit erat. \textbf{Phasellus mauris felis, molestie
-    ac pharetra quis}, tempus nec ante. Donec finibus ante vel purus mollis
-    fermentum. Sed felis mi, pharetra eget nibh a, feugiat eleifend dolor. Nam
-    mollis condimentum purus quis sodales. Nullam eu felis eu nulla eleifend
-    bibendum nec eu lorem. Vivamus felis velit, volutpat ut facilisis ac,
-    commodo in metus.
+    PatternBoost is a ML-enabled mathematical research workflow presented in \cite{}.
+    It involves a training step,
+    in which a neural network is trained to produce examples of mathematical objects
+    that aim to optimize a mathematically meaningful loss function, and a search phase,
+    in which examples produced by the trained model are ``improved'' by standard algorithms
+    to further optimise the loss function.
+    The process then repeats, and the resulting examples are used to train a model again.
 
     \begin{enumerate}
       \item \textbf{Morbi mauris purus}, egestas at vehicula et, convallis
