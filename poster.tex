@@ -229,8 +229,8 @@
 
     for epoch in 0:1000
       for (x, y) in train_loader
-        gradient = gradient(m -> loss(m, x, y), model)
-        Flux.update!(optimizer, model, gradient[1])
+        grad = gradient(m -> loss(m, x, y), model)
+        Flux.update!(optimizer, model, grad[1])
       end
     end
     \end{minted}
