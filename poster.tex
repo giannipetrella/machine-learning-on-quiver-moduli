@@ -41,9 +41,9 @@
 
 \title{Machine learning features of quiver moduli}
 
-\author{Gianni Petrella \inst{1}}
+\author{Gianni Petrella - University of Luxembourg \inst{1}}
 
-\institute[shortinst]{\inst{1} University of Luxembourg}
+\institute[shortinst]{\inst{1} Work supported by the Luxembourg National Research Fund (AFR-17953441)}
 % ====================
 % Footer (optional)
 % ====================
@@ -76,12 +76,15 @@
 
   \begin{block}{Representations of quivers}
 
-  A \emph{quiver} $Q$ is a finite directed multigraph with vertices $Q_0$ and arrows $Q_1$.
-  A \emph{representation} $V$ of $Q$ is a choice of vector space $V_i$ per vertex $i$
-  and a choice of linear application $M_{\alpha}$ for each arrow $\alpha$ \cite{2311.17003}.
+    A \emph{quiver} $Q$ is a finite directed multigraph with vertices $Q_0$ and arrows $Q_1$.
+    A \emph{representation} $V$ of $Q$ is a choice of vector space $V_i$ per vertex $i$
+    and a choice of linear application $M_{\alpha}$ for each arrow $\alpha$ \cite{2311.17003}.
 
-  The \emph{dimension vector} of a representation $V$
-  is~$\tuple{d} \colonequals \dim(V) \colonequals (\dim(V_i))_{i \in Q_0}$.
+    The \emph{dimension vector} of a representation $V$
+    is
+    \begin{equation*}
+    \tuple{d} \colonequals \dim(V) \colonequals (\dim(V_i))_{i \in Q_0}.
+    \end{equation*}
 
     \begin{figure}
       \centering
@@ -115,15 +118,14 @@
     that is, if they lie in the same orbit of the action
     of $\GLd$ on $\repspace(Q, d)$.
 
-    If one fixes a \emph{stability parameter} $\theta \in \ZZ^{Q_0}$ for which
-    $\theta \cdot \tuple{d} = 0$, we say that a representation $V$
+    If one fixes a \emph{stability parameter} $\theta \in \ZZ^{Q_0}$ that satisfies
+    the identity~$\theta\cdot\tuple{d}=0$, we say that a representation $V$
     is $\theta$-stable, respectively $\theta$-semistable,
-    if all of its subrepresentations $W$ satisfy
+    if every subrepresentation $W \subset V$ satisfies
     $\theta \cdot \dim(W) < 0$, respectively
     $\theta\cdot\dim(W)\leq 0$.
 
-    \todo{why are quiver moduli useful}
-    \end{block}
+  \end{block}
 
   \begin{block}{Moduli spaces of stable representations}
 
@@ -146,7 +148,10 @@
     oriented cycles in $Q$ \cite{MR958897}.
     If $Q$ is acyclic, $\modulispace^{\semisimple}(Q, d)$ is thus a point
     and $\modulispace^{\theta\semistable}(Q, d)$ is a projective variety.
-    \vfill
+
+    The complement of $\repspace^{\theta\semistable}(Q,\tuple{d})$ is the
+    \emph{unstable locus}. It admits a stratification into locally closed
+    subsets, called \emph{Harder--Narasimhan strata}.
   \end{block}
 
   \begin{alertblock}{Geometric invariants}
@@ -158,22 +163,20 @@
     several of these features using machine learning techniques.
 
     \begin{itemize}
-      \item \textbf{Euler characteristic} is obtained via Betti numbers computations \cite{MR1974891}.
-      These are strong topological invariants of complex varieties.
+      \item \textbf{Euler characteristic} is obtained
+      via Betti numbers computations \cite{MR1974891}.
+      These are strong topological invariants of complex varieties,
+      and appear in many different mathematical settings.
 
-      \item \textbf{(Strong) ample stability} are properties verified by enumerating
-      all possible Harder--Narasimhan types and destabilizing subdimension vectors as in \cite{MR1974891,2311.17003}.
-      These inform mathematicians on the ``behaviour'' of unstable representations
-      of $Q$.
-
-      \item \textbf{Teleman inequality bounds} are computed again
-      for each Harder--Narasimhan type using \cite{2311.17003}.
-      Teleman quantization is a key tool to infer higher cohomology vanishings
-      on quiver moduli.
+      \item \textbf{Teleman inequality ratios} are numbers between $0$ and $1$ defined
+      on each Harder--Narasimhan stratum of $\repspace(Q,\tuple{d})$.
+      If all of them are strictly smaller than $1$,
+      \emph{Teleman quantization} can be applied to show higher cohomology vanishings
+      on $\modulispace^{\theta\semistable}(Q,\tuple{d})$.
+      This is done in detail in \cite{2311.17003}.
     \end{itemize}
 
   \end{alertblock}
-
 \end{column}
 
 \separatorcolumn
@@ -181,19 +184,19 @@
 \begin{column}{\colwidth}
 
 
-
   \begin{block}{Datasets}
     The training data is obtained by classical algorithms derived from
     the literature of quiver representations. These are implemented in
     \quivertools, see \cite{quivertools} and the accompanying \cite{2506.19432}.
     We harvested data by running the Julia version of \quivertools~on a cluster,
-    using {\tt{Distributed.jl}} to parallelize the computations on a 128 core-CPU node,
-    for a CPU time of ~1000h.
-    We store this dataset in a SQLite database, which exists
-    as part of unrelated work, and retrieve 50000 cases from it
-    for training.
-    In practice, we run tests on 
-
+    using {\tt{Distributed.jl}} to parallelize the computations across 128 cores,
+    for a total CPU time of ~1000h.
+    For this work, we use a set of 50000 combinations of 4-vertex quivers
+    and dimension vectors $\tuple{0} \leq \tuple{d}\leq(5, 5, 5, 5)$.
+    For the Euler characteristic prediction, we ran experiments
+    exclusively with dimension vector $(1, 1, 1, 1)$.
+    These are mathematically relevant because the resulting quiver moduli
+    are toric varieties.
   \end{block}
 
   \begin{block}{Methodology}
@@ -205,7 +208,7 @@
     joined to the dimension vector.
     The dataset is split into training (80\%) and testing data (20\%).
 
-    We use {\tt{Flux.jl}} \cite{}, a pure Julia ML stack.
+    We use {\tt{Flux.jl}} \cite{flux.jl,innes:2018}, a pure Julia ML stack.
 
    \begin{figure}
       \centering
@@ -275,24 +278,27 @@
           \draw[->] (5-\source) edge (6);
 
         \end{tikzpicture}
-      \caption{A standard feedforward neural network.}
+      \caption{A standard feedforward neural network. Input neurons are in green, and
+      the output neuron is in red.}
     \end{figure}
 
     Current results are based on the following choices of hyperparameters.
-    We implemented a learning rate decay scheme that halves $\eta$
-    whenever it detects a plateau in the training loss.
+    We implemented a decay scheme that halves the learning rate
+    whenever it detects a plateau in the training loss lasting for at least 30 epochs.
+    Our models were let train for 1000 epochs.
 
     \begin{table}
       \centering
       \begin{tabular}{lcc}
         \toprule
-        Hyperparameter & Betti number & Teleman ratio\\
+        Hyperparameter & Euler characteristic & Teleman ratio\\
         \midrule
-        Hidden layers                     & 3                 & 3\\
-        Layer sizes                       & (4096, 4096, 512) & (4096, 4096, 512)\\
-        Activations              & {\tt{relu}}       & {\tt{relu}}, sigmoid\\
-        Learning rate             & $3 \cdot 10^{-4}$ & $5 \cdot 10^{-5}$\\
-        Optimiser                         & Adam              & Adam\\
+        Hidden layers             & 3                   & 3\\
+        Layer sizes               & (4096, 4096, 1024)  & (4096, 4096, 512)\\
+        Activations               & {\tt{relu}}         & {\tt{relu}}, sigmoid\\
+        Learning rate             & $10^{-4}$           & $5 \cdot 10^{-5}$\\
+        Optimiser                 & Adam                & Adam\\
+        Loss function             & least squares       & least squares\\
         \bottomrule
       \end{tabular}
       \caption{Hyperparameters used in current setup.}
@@ -301,38 +307,19 @@
 
   \end{block}
 
-  \begin{block}{Nam Cursus Consequat Egestas}
+  \begin{block}{Results}
 
-    Nulla eget sem quam. Ut aliquam volutpat nisi vestibulum convallis. Nunc a
-    lectus et eros facilisis hendrerit eu non urna. Interdum et malesuada fames
-    ac ante \textit{ipsum primis} in faucibus. Etiam sit amet velit eget sem
-    euismod tristique. Praesent enim erat, porta vel mattis sed, pharetra sed
-    ipsum. Morbi commodo condimentum massa, \textit{tempus venenatis} massa
-    hendrerit quis. Maecenas sed porta est. Praesent mollis interdum lectus,
-    sit amet sollicitudin risus tincidunt non.
+    In all of our problems we were able to achieve high precision in predicting
+    numerical invariants.
+    Our model predicting Teleman ratios achieves an average loss of
+    $<0.005$ on training data and $<0.03$ on test data.
 
-    Etiam sit amet tempus lorem, aliquet condimentum velit. Donec et nibh
-    consequat, sagittis ex eget, dictum orci. Etiam quis semper ante. Ut eu
-    mauris purus. Proin nec consectetur ligula. Mauris pretium molestie
-    ullamcorper. Integer nisi neque, aliquet et odio non, sagittis porta justo.
+    \phantom{a}
 
-    \begin{itemize}
-      \item \textbf{Sed consequat} id ante vel efficitur. Praesent congue massa
-        sed est scelerisque, elementum mollis augue iaculis.
-        \begin{itemize}
-          \item In sed est finibus, vulputate nunc gravida, pulvinar lorem. In maximus nunc dolor, sed auctor eros
-            porttitor quis.
-          \item Fusce ornare dignissim nisi. Nam sit amet risus vel lacus
-            tempor tincidunt eu a arcu.
-          \item Donec rhoncus vestibulum erat, quis aliquam leo
-            gravida egestas.
-        \end{itemize}
-      \item \textbf{Sed luctus, elit sit amet} dictum maximus, diam dolor
-        faucibus purus, sed lobortis justo erat id turpis.
-      \item \textbf{Pellentesque facilisis dolor in leo} bibendum congue.
-        Maecenas congue finibus justo, vitae eleifend urna facilisis at.
-    \end{itemize}
-
+    \begin{figure}
+    \includegraphics{teleman-ratio-loss.png}
+    \caption{Loss of Teleman ratio predictor over training.}
+    \end{figure}
   \end{block}
 
 \end{column}
@@ -340,63 +327,70 @@
 \separatorcolumn
 
 \begin{column}{\colwidth}
+  \begin{block}
 
-  \begin{exampleblock}{A Highlighted Block Containing Some Math}
+    Our model predicting Euler characteristics scores
+    $>85\%$ on training data and $~80\%$ on test data,
+    with both train and test losses being $<0.5$.
 
-    A different kind of highlighted block.
+    \begin{figure}
+    \includegraphics{chi-loss.png}
+    \caption{Loss of Euler characteristic prediction over training.}
+    \end{figure}
 
-    $$
-    \int_{-\infty}^{\infty} e^{-x^2}\,dx = \sqrt{\pi}
-    $$
+    \begin{figure}
+    \includegraphics{chi-accuracy.png}
+    \caption{Accuracy of Euler characteristic prediction over training.}
+    \end{figure}
 
-    Interdum et malesuada fames $\{1, 4, 9, \ldots\}$ ac ante ipsum primis in
-    faucibus. Cras eleifend dolor eu nulla suscipit suscipit. Sed lobortis non
-    felis id vulputate.
+    \end{block}
 
-    \heading{A Heading Inside a Block}
+  \begin{exampleblock}{Conclusions}
 
-    Praesent consectetur mi $x^2 + y^2$ metus, nec vestibulum justo viverra
-    nec. Proin eget nulla pretium, egestas magna aliquam, mollis neque. Vivamus
-    dictum $\mathbf{u}^\intercal\mathbf{v}$ sagittis odio, vel porta erat
-    congue sed. Maecenas ut dolor quis arcu auctor porttitor.
+    Our work shows that relatively simple mathematical methods
+    can reliably approximate invariants previously known to only be accessible
+    via highly complex algorithms.
 
-    \heading{Another Heading Inside a Block}
+    On one hand, this suggests that less complex algorithms
+    may exist, and further research in this direction might be fruitful.
 
-    Sed augue erat, scelerisque a purus ultricies, placerat porttitor neque.
-    Donec $P(y \mid x)$ fermentum consectetur $\nabla_x P(y \mid x)$ sapien
-    sagittis egestas. Duis eget leo euismod nunc viverra imperdiet nec id
-    justo.
-
+    On the other hand, our results serve as evidence
+    to the usefulness of ML-enabled workflows for mathematical research:
+    as we have proved that our features are learnable,
+    we plan to use more sophisticated workflows for generating
+    mathematically meaningful examples, e.g. using
+    transformer networks via PatternBoost \cite{2411.00566}.
   \end{exampleblock}
 
-  \begin{block}{Outlook}
+  % \begin{block}{Outlook}
 
-    PatternBoost is a ML-enabled mathematical research workflow
-    presented in \cite{2411.00566}.
-    It consists of two iterative phases:
-    a classical search for mathematical objects
-    and their properties conducted using classical algorithms,
-    and a training phase
-    in which the best results of the search
-    are used to train a transformer neural network.
-    Samples from the trained transformer are
-    then used as starting point for the search phase again,
-    and the process repeats.
+  %   PatternBoost is a ML-enabled mathematical research workflow
+  %   presented in .
+  %   It consists of two iterative phases:
+  %   a classical search for mathematical objects
+  %   and their properties conducted using classical algorithms,
+  %   and a training phase
+  %   in which the best results of the search
+  %   are used to train a transformer neural network.
+  %   Samples from the trained transformer are
+  %   then used as starting point for the search phase again,
+  %   and the process repeats.
 
-    PatternBoost has been used to produce examples of mathematical objects
-    that maximize certain quantities, namely exceeding conjectured bounds
-    and thus disproving standing conjectures (see \cite[Section~3.3]{2411.00566}).
+  %   PatternBoost has been used to produce examples of mathematical objects
+  %   that maximize certain quantities, namely exceeding conjectured bounds
+  %   and thus disproving standing conjectures (see \cite[Section~3.3]{2411.00566}).
 
-    \todo{add a scheme explaining PatternBoost}
+  %   \todo{add a scheme explaining PatternBoost}
 
-    We apply the PatternBoost technique to search for quiver moduli
-    that optimise currently open problems, e.g. in \cite{2311.17003}.
-  \end{block}
+  %   We plan to apply the PatternBoost technique to search for quiver moduli
+  %   that optimise currently open problems, e.g. in \cite{2311.17003}.
+  % \end{block}
 
   \begin{block}{References}
 
+  {\footnotesize
   \printbibliography
-
+}
   \end{block}
 
 \end{column}
