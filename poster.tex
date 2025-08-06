@@ -188,11 +188,15 @@
     The training data is obtained by classical algorithms derived from
     the literature of quiver representations. These are implemented in
     \quivertools, see \cite{quivertools} and the accompanying \cite{2506.19432}.
-    We harvested data by running the Julia version of \quivertools~on a cluster,
-    using {\tt{Distributed.jl}} to parallelize the computations across 128 cores,
+    We harvested data using {\tt{QuiverTools.jl}},
+    the Julia version of \quivertools, and {\tt{Distributed.jl}}
+    to parallelize the computations across 128 cores,
     for a total CPU time of ~1000h.
     For this work, we use a set of 50000 combinations of 4-vertex quivers
-    and dimension vectors $\tuple{0} \leq \tuple{d}\leq(5, 5, 5, 5)$.
+    and dimension vectors $\tuple{0} \leq \tuple{d}\leq(5, 5, 5, 5)$, using
+    the functions
+    \mintinline{julia}{betti_numbers()} and \mintinline{julia}{teleman_weights()}
+    from {\tt{QuiverTools.jl}} to compute the ground truth values.
     For the Euler characteristic prediction, we ran experiments
     exclusively with dimension vector $(1, 1, 1, 1)$.
     These are mathematically relevant because the resulting quiver moduli
@@ -207,7 +211,9 @@
     with one-dimensional layers.
     The input of our network is always the adjacency matrix of the quiver, flattened,
     joined to the dimension vector.
-    The dataset of 50000 entries is always split into training (80\%) and testing data (20\%).
+    The dataset of 50000 entries is always randomly split
+    into training (80\%) and testing data (20\%),
+    and batches are shuffled.
 
     We use {\tt{Flux.jl}} \cite{flux.jl,innes:2018}, a pure Julia ML stack.
 
@@ -228,7 +234,7 @@
       end
     end
     \end{minted}
-    \caption{Code defining model, data loader and training loop predicting Teleman ratios.}
+    \caption{Model, data loader and training loop predicting Teleman ratios.}
     \end{figure}
 
 
@@ -305,8 +311,8 @@
    %  \end{figure}
 
     Current results are based on the following choices of hyperparameters.
-    We implemented a decay scheme that halves the learning rate
-    whenever it detects a plateau in the training loss lasting for at least 30 epochs.
+    We use a decay scheme that halves the learning rate
+    when the training loss plateaus for at least 30 epochs.
     Our models were let train for 1000 epochs.
 
     \begin{table}
@@ -335,8 +341,6 @@
     Our model predicting Teleman ratios achieves an average loss of
     $<0.005$ on training data and $<0.03$ on test data.
 
-    \phantom{a}
-
     \begin{figure}
     \includegraphics{teleman-ratio-loss.png}
     \caption{Loss of Teleman ratio predictor over training.}
@@ -356,12 +360,8 @@
 
     \begin{figure}
     \includegraphics{chi-loss.png}
-    \caption{Loss of Euler characteristic prediction over training.}
-    \end{figure}
-
-    \begin{figure}
     \includegraphics{chi-accuracy.png}
-    \caption{Accuracy of Euler characteristic prediction over training.}
+    \caption{Loss and accuracy of Euler characteristic prediction over training.}
     \end{figure}
 
     \end{block}
