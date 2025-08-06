@@ -68,7 +68,7 @@
 
 \begin{document}
 
-\begin{frame}[t]
+\begin{frame}[t, fragile]
 \begin{columns}[t]
 \separatorcolumn
 
@@ -80,8 +80,7 @@
     A \emph{representation} $V$ of $Q$ is a choice of vector space $V_i$ per vertex $i$
     and a choice of linear application $M_{\alpha}$ for each arrow $\alpha$ \cite{2311.17003}.
 
-    The \emph{dimension vector} of a representation $V$
-    is
+    The \emph{dimension vector} of a representation $V$ is
     \begin{equation*}
     \tuple{d} \colonequals \dim(V) \colonequals (\dim(V_i))_{i \in Q_0}.
     \end{equation*}
@@ -90,19 +89,20 @@
       \centering
       \begin{tikzpicture}
         \node (1) at (0, 0)              {$\bullet$};
-        \node (4) [above of = 1]              {$1$};
+        % \node (4) [left of = 1]              {$1$};
         \node (2) at (6, 0)              {$\bullet$};
-        \node (5) [above of = 2]               {$3$};
+        % \node (5) [right of = 2]               {$3$};
         \node (3) at (6, -6)             {$\bullet$};
-        \node (6) [above of = 3]              {$5$};
+        % \node (6) [right of = 3]              {$5$};
 
-        \draw[->, bend left  = 30] (1) edge (2);
-        \draw[->, bend left  = 10] (1) edge (2);
-        \draw[->, bend right = 10] (1) edge (2);
-        \draw[->, bend right = 30] (1) edge (2);
-        \draw[->, bend left  = 10] (1) edge (3);
-        \draw[->, bend right = 10] (1) edge (3);
-        \draw[->]                  (2) edge (3);
+        % \draw [line width=1mm,, open]}]
+        \draw[->, line width=0.5mm, -{Stealth[length=5mm]}, bend left  = 30] (1) edge (2);
+        \draw[->, line width=0.5mm, -{Stealth[length=5mm]}, bend left  = 10] (1) edge (2);
+        \draw[->, line width=0.5mm, -{Stealth[length=5mm]}, bend right = 10] (1) edge (2);
+        \draw[->, line width=0.5mm, -{Stealth[length=5mm]}, bend right = 30] (1) edge (2);
+        \draw[->, line width=0.5mm, -{Stealth[length=5mm]}, bend left  = 10] (1) edge (3);
+        \draw[->, line width=0.5mm, -{Stealth[length=5mm]}, bend right = 10] (1) edge (3);
+        \draw[->, line width=0.5mm, -{Stealth[length=5mm]}                 ] (2) edge (3);
       \end{tikzpicture}
       \caption{A quiver with three vertices.}
     \end{figure}
@@ -203,84 +203,106 @@
 
     We train feedforward neural networks to predict various numerical values
     associated to a quiver and a dimension vector.
-    For all of our prediction problems we use multi-layer perceptron architectures.
+    For all of our prediction problems we use multi-layer perceptron architectures,
+    with one-dimensional layers.
     The input of our network is always the adjacency matrix of the quiver, flattened,
     joined to the dimension vector.
-    The dataset is split into training (80\%) and testing data (20\%).
+    The dataset of 50000 entries is always split into training (80\%) and testing data (20\%).
 
     We use {\tt{Flux.jl}} \cite{flux.jl,innes:2018}, a pure Julia ML stack.
 
-   \begin{figure}
-      \centering
-      \begin{tikzpicture}[
-      neuron/.style={circle, fill=black!25, minimum size=30pt, inner sep=0pt},
-          input neuron/.style={neuron, fill=green!50},
-          output neuron/.style={neuron, fill=red!50},
-          hidden neuron/.style={neuron, fill=blue!50},
-      ]
-        \node[input neuron] (1-0) at (0,0) {};
-        \node[input neuron] (1-1) at (0,2) {};
-        \node             (1-mid) at (0,4) {\vdots};
-        \node[input neuron] (1-2) at (0,6) {};
-        \node[input neuron] (1-3) at (0,8) {};
+    \begin{figure}
+    \begin{minted}{julia}
+    model = Chain(Dense(20 => 4096, relu),
+      Dense(4096 => 4096, relu),
+      Dense(4096 => 512, relu),
+      Dense(512 => 1, sigmoid));
 
-        \node[hidden neuron] (2-0) at (3,-1) {};
-        \node[hidden neuron] (2-1) at (3, 1) {};
-        \node[hidden neuron] (2-2) at (3, 3) {};
-        \node              (2-mid) at (3, 4) {\vdots};
-        \node[hidden neuron] (2-3) at (3, 5) {};
-        \node[hidden neuron] (2-4) at (3, 7) {};
-        \node[hidden neuron] (2-5) at (3, 9) {};
+    train_loader = DataLoader(
+      (train_data, train_target), batchsize=1024);
 
-        \foreach \source in {0,...,3}
-          \foreach \target in {0,...,5}
-            \draw[->] (1-\source) edge (2-\target);
-
-        \node (3-0) at (6,-1) {\dots};
-        \node (3-1) at (6, 1) {\dots};
-        \node (3-2) at (6, 3) {\dots};
-        \node (3-3) at (6, 5) {\dots};
-        \node (3-4) at (6, 7) {\dots};
-        \node (3-5) at (6, 9) {\dots};
-
-        \foreach \source in {0,...,5}
-          \foreach \target in {0,...,5}
-            \draw[->] (2-\source) edge (3-\target);
-
-        \node[hidden neuron] (4-0) at (9,-1) {};
-        \node[hidden neuron] (4-1) at (9, 1) {};
-        \node[hidden neuron] (4-2) at (9, 3) {};
-        \node              (4-mid) at (9, 4) {\vdots};
-        \node[hidden neuron] (4-3) at (9, 5) {};
-        \node[hidden neuron] (4-4) at (9, 7) {};
-        \node[hidden neuron] (4-5) at (9, 9) {};
-
-        \foreach \source in {0,...,5}
-          \foreach \target in {0,...,5}
-            \draw[->] (3-\source) edge (4-\target);
-
-
-        \node[hidden neuron] (5-0) at (12,-1) {};
-        \node[hidden neuron] (5-1) at (12, 1) {};
-        \node[hidden neuron] (5-2) at (12, 3) {};
-        \node              (5-mid) at (12, 4) {\vdots};
-        \node[hidden neuron] (5-3) at (12, 5) {};
-        \node[hidden neuron] (5-4) at (12, 7) {};
-        \node[hidden neuron] (5-5) at (12, 9) {};
-
-        \foreach \source in {0,...,5}
-          \foreach \target in {0,...,5}
-            \draw[->] (4-\source) edge (5-\target);
-
-        \node[output neuron] (6) at (15, 4) {};
-
-        \foreach \source in {0,...,5}
-          \draw[->] (5-\source) edge (6);
-
-        \end{tikzpicture}
-      \caption{A standard feedforward neural network. Input neurons are in green, and
-      the output neuron is in red.}
+    for epoch in 0:1000
+      for (x, y) in train_loader
+        gradient = gradient(m -> loss(m, x, y), model)
+        Flux.update!(optimizer, model, gradient[1])
+      end
+    end
+    \end{minted}
+    \caption{Code defining model, data loader and training loop predicting Teleman ratios.}
     \end{figure}
+
+
+   % \begin{figure}
+   %    \centering
+   %    \begin{tikzpicture}[
+   %    neuron/.style={circle, fill=black!25, minimum size=30pt, inner sep=0pt},
+   %        input neuron/.style={neuron, fill=green!50},
+   %        output neuron/.style={neuron, fill=red!50},
+   %        hidden neuron/.style={neuron, fill=blue!50},
+   %    ]
+   %      \node[input neuron] (1-0) at (0,0) {};
+   %      \node[input neuron] (1-1) at (0,2) {};
+   %      \node             (1-mid) at (0,4) {\vdots};
+   %      \node[input neuron] (1-2) at (0,6) {};
+   %      \node[input neuron] (1-3) at (0,8) {};
+
+   %      \node[hidden neuron] (2-0) at (3,-1) {};
+   %      \node[hidden neuron] (2-1) at (3, 1) {};
+   %      \node[hidden neuron] (2-2) at (3, 3) {};
+   %      \node              (2-mid) at (3, 4) {\vdots};
+   %      \node[hidden neuron] (2-3) at (3, 5) {};
+   %      \node[hidden neuron] (2-4) at (3, 7) {};
+   %      \node[hidden neuron] (2-5) at (3, 9) {};
+
+   %      \foreach \source in {0,...,3}
+   %        \foreach \target in {0,...,5}
+   %          \draw[->] (1-\source) edge (2-\target);
+
+   %      \node (3-0) at (6,-1) {\dots};
+   %      \node (3-1) at (6, 1) {\dots};
+   %      \node (3-2) at (6, 3) {\dots};
+   %      \node (3-3) at (6, 5) {\dots};
+   %      \node (3-4) at (6, 7) {\dots};
+   %      \node (3-5) at (6, 9) {\dots};
+
+   %      \foreach \source in {0,...,5}
+   %        \foreach \target in {0,...,5}
+   %          \draw[->] (2-\source) edge (3-\target);
+
+   %      \node[hidden neuron] (4-0) at (9,-1) {};
+   %      \node[hidden neuron] (4-1) at (9, 1) {};
+   %      \node[hidden neuron] (4-2) at (9, 3) {};
+   %      \node              (4-mid) at (9, 4) {\vdots};
+   %      \node[hidden neuron] (4-3) at (9, 5) {};
+   %      \node[hidden neuron] (4-4) at (9, 7) {};
+   %      \node[hidden neuron] (4-5) at (9, 9) {};
+
+   %      \foreach \source in {0,...,5}
+   %        \foreach \target in {0,...,5}
+   %          \draw[->] (3-\source) edge (4-\target);
+
+
+   %      \node[hidden neuron] (5-0) at (12,-1) {};
+   %      \node[hidden neuron] (5-1) at (12, 1) {};
+   %      \node[hidden neuron] (5-2) at (12, 3) {};
+   %      \node              (5-mid) at (12, 4) {\vdots};
+   %      \node[hidden neuron] (5-3) at (12, 5) {};
+   %      \node[hidden neuron] (5-4) at (12, 7) {};
+   %      \node[hidden neuron] (5-5) at (12, 9) {};
+
+   %      \foreach \source in {0,...,5}
+   %        \foreach \target in {0,...,5}
+   %          \draw[->] (4-\source) edge (5-\target);
+
+   %      \node[output neuron] (6) at (15, 4) {};
+
+   %      \foreach \source in {0,...,5}
+   %        \draw[->] (5-\source) edge (6);
+
+   %      \end{tikzpicture}
+   %    \caption{A standard feedforward neural network. Input neurons are in green, and
+   %    the output neuron is in red.}
+   %  \end{figure}
 
     Current results are based on the following choices of hyperparameters.
     We implemented a decay scheme that halves the learning rate
@@ -294,8 +316,9 @@
         Hyperparameter & Euler characteristic & Teleman ratio\\
         \midrule
         Hidden layers             & 3                   & 3\\
-        Layer sizes               & (4096, 4096, 1024)  & (4096, 4096, 512)\\
+        Layer sizes               & 4096, 4096, 1024    & 4096, 4096, 512\\
         Activations               & {\tt{relu}}         & {\tt{relu}}, sigmoid\\
+        Batch size                & 1024                & 1024\\
         Learning rate             & $10^{-4}$           & $5 \cdot 10^{-5}$\\
         Optimiser                 & Adam                & Adam\\
         Loss function             & least squares       & least squares\\
@@ -303,8 +326,6 @@
       \end{tabular}
       \caption{Hyperparameters used in current setup.}
     \end{table}
-
-
   \end{block}
 
   \begin{block}{Results}
