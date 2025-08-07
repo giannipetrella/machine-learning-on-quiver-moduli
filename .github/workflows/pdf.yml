@@ -26,6 +26,7 @@ jobs:
         uses: xu-cheng/latex-action@v2
         with:
           root_file: ${{ env.FILES }}
+          latexmk_use_lualatex: true
           latexmk_shell_escape: true
           work_in_root_file_dir: true
       - name: Move output pdf's preserving directory structure
