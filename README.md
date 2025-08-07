@@ -3,6 +3,7 @@
 [![pdf](https://github.com/giannipetrella/machine-learning-quiver-moduli/actions/workflows/pdf.yml/badge.svg)](https://github.com/giannipetrella/machine-learning-quiver-moduli/actions/workflows/pdf.yml)
 
 [![pdf](https://img.shields.io/badge/pdf-note-green)](https://github.com/giannipetrella/machine-learning-quiver-moduli/blob/build/note.pdf)
+[![pdf](https://img.shields.io/badge/pdf-poster-green)](https://github.com/giannipetrella/machine-learning-quiver-moduli/blob/build/poster.pdf)
 
 ## Experiments with feedforward networks:
 
