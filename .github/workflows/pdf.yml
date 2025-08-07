@@ -14,6 +14,7 @@ jobs:
       # one filename per line, including directory if in a subdirectory
       FILES: |
         note.tex
+        poster.tex
     steps:
       - name: Checkout
         uses: actions/checkout@v4
