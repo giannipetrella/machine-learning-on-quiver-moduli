@@ -1,5 +1,10 @@
-# Latex template
+# Machine learning on quiver moduli
 
-[![pdf](https://github.com/giannipetrella/latex-meta/actions/workflows/pdf.yml/badge.svg)](https://github.com/giannipetrella/latex-meta/actions/workflows/pdf.yml)
+[![pdf](https://github.com/giannipetrella/machine-learning-quiver-moduli/actions/workflows/pdf.yml/badge.svg)](https://github.com/giannipetrella/machine-learning-quiver-moduli/actions/workflows/pdf.yml)
 
-[![pdf](https://img.shields.io/badge/pdf-note-green)](https://github.com/giannipetrella/latex-meta/blob/build/note.pdf)
+[![pdf](https://img.shields.io/badge/pdf-note-green)](https://github.com/giannipetrella/machine-learning-quiver-moduli/blob/build/note.pdf)
+
+## Experiments with feedforward networks:
+
+1. Guess Hochschild homology
+2. Guess max{LHS/RHS | Teleman inequalities}
